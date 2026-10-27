@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kerabat Teknik - E-Portofolio Proyek Edupreneurship</title>
+<meta name="description" content="Kerabat Teknik (Kelompok 4): modul digital diagnosis sistem starter dan paket trainer untuk SMK Otomotif. Dari Alat ke Kompetensi.">
+<link rel="icon" type="image/png" href="images/logo-kerabat-teknik.svg">
+<!-- Font. Kalau internet mati, otomatis pakai font bawaan perangkat -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+document.documentElement.classList.add('js');
+// Mode tema: pilihan terakhir pengunjung, kalau belum ada ikut pengaturan perangkat
+(function(){
+  var t = null;
+  try { t = localStorage.getItem('kerabatteknik-theme'); } catch(e){}
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+// Foto tidak ketemu -> coba .png/.jpg/.jpeg/.webp, kalau tetap tidak ada tampilkan inisial
+function fotoLain(img){
+  var ext = ['png','jpg','jpeg','webp'], m = img.getAttribute('src').match(/^(.*)\.(\w+)$/);
+  var tried = (img.dataset.tried || (m ? m[2] : '')).split(',');
+  var next = m && ext.filter(function(e){ return tried.indexOf(e) < 0; })[0];
+  if (next){ tried.push(next); img.dataset.tried = tried.join(','); img.src = m[1] + '.' + next; return; }
+  var box = img.parentNode, ini = box.getAttribute('data-ini');
+  if (!ini){
+    ini = (img.alt || '?').split(/\s+/).filter(function(w){ return w && !/[.,\[\]]/.test(w); })
+      .slice(0, 2).map(function(w){ return w[0].toUpperCase(); }).join('');
+  }
+  img.remove(); box.appendChild(document.createTextNode(ini || '?'));
+}
+</script>
+<style>
+:root{
+  --bg:#050505; --bg-2:#0b0b0f; --line:rgba(255,255,255,.1); --line-2:rgba(255,255,255,.2); --line-3:rgba(255,255,255,.06);
+  --text:#fff; --muted:#9ca3af; --soft:#d1d5db; --dim:#6b7280; --nav-text:#e5e7eb;
+  --surface:rgba(255,255,255,.03); --surface-2:rgba(255,255,255,.06); --hover:rgba(255,255,255,.08);
+  --alt-bg:rgba(0,0,0,.3); --nav-bg:rgba(5,5,5,.75); --menu-bg:rgba(10,10,14,.95);
+  --solid-bg:#fff; --solid-fg:#050505; --marquee:rgba(255,255,255,.5); --ghost:rgba(255,255,255,.15);
+  --ph-bg:#0e0e13; --ph-stripe:rgba(255,255,255,.025); --ph-text:rgba(255,255,255,.4);
+  --shadow:0 25px 50px -12px rgba(0,0,0,.6); --blob-op:.4;
+  --cyan-t:#6EA8FF; --indigo-t:#9DB8F5; --pink-t:#F0707F; --orange-t:#FFC72C;
+  color-scheme:dark;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --indigo:#0B3C8C; --pink:#D7263D; --cyan:#2F7BE8; --orange:#FFC72C; --yellow:#fcd34d;
+}
+/* Mode terang */
+:root[data-theme="light"]{
+  --bg:#f5f6fb; --bg-2:#e9ebf4; --line:rgba(15,23,42,.1); --line-2:rgba(15,23,42,.18); --line-3:rgba(15,23,42,.07);
+  --text:#0f172a; --muted:#475569; --soft:#334155; --dim:#64748b; --nav-text:#1e293b;
+  --surface:rgba(255,255,255,.72); --surface-2:rgba(15,23,42,.05); --hover:rgba(15,23,42,.06);
+  --alt-bg:rgba(255,255,255,.55); --nav-bg:rgba(245,246,251,.82); --menu-bg:rgba(255,255,255,.97);
+  --solid-bg:#0f172a; --solid-fg:#fff; --marquee:rgba(15,23,42,.55); --ghost:rgba(15,23,42,.14);
+  --ph-bg:#e6e8f1; --ph-stripe:rgba(15,23,42,.035); --ph-text:rgba(15,23,42,.45);
+  --shadow:0 25px 50px -18px rgba(15,23,42,.25); --blob-op:.2;
+  --cyan-t:#1D5FD1; --indigo-t:#0B3C8C; --pink-t:#B0182C; --orange-t:#8A5A00; --yellow:#b45309;
+  color-scheme:light;
+}
+body,.nav,.card,.section.alt,footer,.tbl td,.akses a{transition-property:background-color,border-color,color,box-shadow;transition-duration:.4s}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,video{display:block;max-width:100%}
+strong{color:var(--text);font-weight:600}
+svg.i{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.125em}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.wrap-sm{max-width:880px;margin:0 auto;padding:0 24px}
+.section{padding:96px 0;position:relative;z-index:1}
+.section.alt{background:var(--alt-bg);border-top:1px solid var(--line-3);border-bottom:1px solid var(--line-3)}
+.g2,.g3,.g4{display:grid;gap:48px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.gap-sm{gap:24px}
+.center{text-align:center}
+.mb-l{margin-bottom:64px}
+.mb-m{margin-bottom:40px}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.section{padding:72px 0}}
+
+/* ---------- background ---------- */
+.blobs{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:var(--blob-op);animation:blob 12s infinite alternate}
+.blob.b1{width:380px;height:380px;background:var(--indigo);top:-10%;left:-10%}
+.blob.b2{width:480px;height:480px;background:var(--pink);bottom:-20%;right:-10%;animation-delay:-5s}
+.blob.b3{width:320px;height:320px;background:var(--cyan);top:40%;left:40%;animation-duration:16s}
+@keyframes blob{0%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,-50px) scale(1.15)}100%{transform:translate(-50px,50px) scale(.85)}}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{line-height:1.15;font-weight:700;letter-spacing:-.01em}
+.h2{font-size:clamp(2rem,4.5vw,3rem);margin-bottom:14px}
+.lead{color:var(--muted)}
+.bab{display:block;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.sub{font-size:1.4rem;padding-bottom:8px;margin-bottom:24px;border-bottom:1px solid var(--line-2)}
+.sub.sm{font-size:1.1rem}
+.grad{background:linear-gradient(to right,var(--cyan),var(--indigo),var(--pink),var(--cyan));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+:root[data-theme="light"] .grad{background-image:linear-gradient(to right,#0891b2,#4f46e5,#db2777,#0891b2)}
+.c-cyan{color:var(--cyan-t)}.c-indigo{color:var(--indigo-t)}.c-pink{color:var(--pink-t)}.c-orange{color:var(--orange-t)}
+.muted{color:var(--muted)}.soft{color:var(--soft)}.small{font-size:14px}
+.list{color:var(--soft);padding-left:20px;display:grid;gap:12px}
+.list.tight{gap:6px}
+.list li::marker{color:var(--dim)}
+.prose p+p{margin-top:14px}
+/* Teks kuning = masih perlu diisi. Hapus class "isi" setelah diganti */
+.isi{color:var(--yellow);border-bottom:1px dashed rgba(252,211,77,.6)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:16px 0;transition:background .3s,border-color .3s}
+.nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:700;font-size:1.5rem;letter-spacing:-.04em}
+.nav-links{display:flex;gap:20px}
+.nav-links a{font-size:12px;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;color:var(--nav-text);transition:color .2s}
+.nav-links a:hover{color:var(--cyan-t)}
+.nav-right{display:flex;align-items:center;gap:22px}
+.theme-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);background:var(--surface-2);color:var(--text);cursor:pointer;font-size:18px;transition:transform .4s var(--ease),border-color .25s,background .25s}
+.theme-btn:hover{border-color:var(--cyan);transform:rotate(-20deg)}
+.theme-btn .sun{display:none}
+:root[data-theme="light"] .theme-btn .sun{display:block}
+:root[data-theme="light"] .theme-btn .moon{display:none}
+.menu-btn{display:none;background:none;border:0;color:var(--text);font-size:26px;cursor:pointer;padding:4px}
+.mobile-menu{display:none;margin:14px 24px 0;padding:22px;border-radius:16px;background:var(--menu-bg);border:1px solid var(--line);flex-direction:column;gap:16px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:13px;text-transform:uppercase;letter-spacing:.12em}
+@media(max-width:1180px){.nav-links{display:none}.menu-btn{display:block}.nav-right{gap:10px}}
+
+/* ---------- hero ---------- */
+.hero{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative;z-index:1}
+.pill{display:inline-block;padding:5px 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface-2);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan-t);margin-bottom:24px}
+.hero h1{font-size:clamp(2.1rem,7vw,4.6rem);margin-bottom:24px}
+.typed{color:var(--text);display:inline-block;min-height:1.15em}
+.caret{display:inline-block;width:3px;height:.9em;background:var(--cyan-t);margin-left:4px;vertical-align:-.05em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero p{color:var(--muted);max-width:580px;margin:0 auto 40px;font-size:1.05rem}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 28px;border-radius:999px;font-weight:600;font-size:15px;border:1px solid var(--line-2);transition:transform .25s,background .25s,border-color .25s;cursor:pointer;background:none;color:var(--text);font-family:inherit}
+.btn:hover{background:var(--hover)}
+.btn.solid{background:var(--solid-bg);color:var(--solid-fg);border-color:var(--solid-bg)}
+.btn.solid:hover{transform:scale(1.04);background:var(--solid-bg)}
+.btn.sm{padding:10px 20px;font-size:14px}
+.btn.off{opacity:.45;cursor:not-allowed;border-style:dashed}
+.btn.off:hover{background:none;transform:none}
+@media(max-width:560px){.hero .btn{width:100%;max-width:300px}}
+
+/* ---------- marquee ---------- */
+.marquee{overflow:hidden;white-space:nowrap;padding:15px 0;position:relative;z-index:1;background:linear-gradient(90deg,rgba(31,95,204,.2),rgba(215,38,61,.2));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.marquee-in{display:inline-block;animation:marquee 28s linear infinite;font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--marquee)}
+.marquee-in .sep{margin:0 18px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;padding:14px 16px;font-weight:600;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.tbl td{padding:14px 16px;border-bottom:1px solid var(--line-3);color:var(--soft);vertical-align:top}
+.tbl td.k{color:var(--dim);width:190px}
+.tbl td.v{color:var(--text)}
+.tbl.wide{min-width:720px}
+
+/* ---------- cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:border-color .5s var(--ease),box-shadow .5s var(--ease)}
+.card:hover{box-shadow:0 0 24px rgba(47,123,232,.15)}
+.card:hover{border-color:rgba(47,123,232,.4)}
+.card.side{padding:20px 22px;border-radius:12px;border-left-width:4px}
+.card.side h4{font-size:1.1rem;margin-bottom:4px}
+.card.side p{font-size:14px;color:var(--soft)}
+.bl-cyan{border-left-color:var(--cyan)!important}.bl-indigo{border-left-color:var(--indigo)!important}.bl-pink{border-left-color:var(--pink)!important}
+.big-icon{font-size:46px;margin-bottom:22px}
+.card h3{font-size:1.5rem;margin-bottom:12px}
+.label{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin:22px 0 8px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;color:var(--soft)}
+.flow span{padding:4px 10px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line)}
+.flow i{color:var(--dim);font-style:normal}
+.stack{display:grid;gap:16px}
+.swhat h4{font-size:1.6rem;margin-bottom:2px}
+.swhat .tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+
+/* ---------- media ---------- */
+.media{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/9;background:var(--bg-2)}
+.glow-frame{position:relative}
+.glow-frame::before{content:"";position:absolute;inset:-4px;border-radius:26px;background:linear-gradient(90deg,var(--cyan),var(--indigo));filter:blur(10px);opacity:.3;transition:opacity 1s}
+.glow-frame:hover::before{opacity:.55}
+/* Placeholder: tampil selama foto/video belum ada */
+.ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:12px;color:var(--ph-text);font-size:13px;background:repeating-linear-gradient(135deg,var(--ph-stripe) 0 12px,transparent 12px 24px),var(--ph-bg)}
+.ph svg.i{font-size:30px;opacity:.7}
+.media img,.media video,.gal img,.gal video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+
+/* ---------- modul ---------- */
+.modul{display:flex;flex-direction:column}
+.modul .top{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+.modul .ico{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-size:28px;flex:none;border:1px solid var(--line)}
+.modul .ico.a{background:rgba(31,95,204,.15);color:var(--indigo-t)}
+.modul .ico.b{background:rgba(215,38,61,.15);color:var(--pink-t)}
+.modul .kind{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.modul h3{margin:2px 0 0}
+.toc{list-style:none;counter-reset:t;display:grid;gap:0;margin-top:6px;border-top:1px solid var(--line)}
+.toc li{counter-increment:t;display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-3);font-size:14px;color:var(--soft)}
+.toc li::before{content:counter(t,decimal-leading-zero);color:var(--dim);font-variant-numeric:tabular-nums;min-width:22px}
+.modul .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:26px}
+.modul .meta{font-size:13px;color:var(--dim);margin-top:14px}
+.akses{margin-top:48px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.akses a{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:14px;border:1px solid var(--line);background:var(--surface);transition:border-color .25s,background .25s}
+.akses a:hover{border-color:rgba(47,123,232,.45);background:var(--hover)}
+.akses a.off{opacity:.45;border-style:dashed;cursor:not-allowed}
+.akses a.off:hover{border-color:var(--line);background:var(--surface)}
+.akses .t{font-weight:600;font-size:15px}
+.akses .d{font-size:13px;color:var(--dim)}
+.akses svg.i{font-size:22px;color:var(--cyan-t)}
+.akses .arrow{margin-left:auto;color:var(--dim);font-size:16px}
+@media(max-width:900px){.akses{grid-template-columns:1fr}}
+/* ---------- dokumen & kontak ---------- */
+.dokgrid{margin-top:40px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.dk{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:14px;border:1px solid var(--line);background:var(--surface);flex-wrap:wrap}
+.dk>svg.i{font-size:24px;color:var(--cyan-t);flex:none}
+.dk .t{font-weight:600;font-size:15px}.dk .d{font-size:13px;color:var(--dim);margin-top:2px}
+.dk>div:nth-child(2){flex:1 1 220px}
+.dk .acts{display:flex;gap:8px;margin-left:auto}
+.kontak{margin-top:48px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.kontak .kc{display:flex;align-items:center;gap:18px;padding:20px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+.kontak .kc img{width:118px;height:118px;border-radius:10px;background:#fff;padding:6px;flex:none}
+.kontak .kc .t{font-weight:600;font-size:16px}.kontak .kc .d{font-size:13px;color:var(--dim);margin:4px 0 12px}
+@media(max-width:900px){.dokgrid,.kontak{grid-template-columns:1fr}.kontak .kc img{width:92px;height:92px}}
+
+
+/* ---------- galeri ---------- */
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:16px}
+.gal{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:var(--bg-2)}
+.gal.w2{grid-column:span 2}.gal.h2{grid-row:span 2}
+.gal img,.gal video{transition:transform .7s,filter .5s}
+.gal:hover img,.gal:hover video{transform:scale(1.08);filter:brightness(.6)}
+.gal .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:26px 14px 12px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));opacity:0;transition:opacity .3s}
+.gal:hover .cap{opacity:1}
+.gal.extra{display:none}
+.gallery.expanded .gal.extra{display:block;animation:pop .5s ease both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@media(max-width:760px){.gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}}
+
+/* ---------- tim (gaya zig-zag) ---------- */
+.team{display:grid;gap:150px}
+.member{display:flex;align-items:center;gap:56px;position:relative}
+.member.rev{flex-direction:row-reverse;text-align:right}
+.member .ghost{position:absolute;top:-56px;left:80px;font-size:clamp(64px,10vw,130px);font-weight:700;line-height:1;white-space:nowrap;color:transparent;-webkit-text-stroke:1px var(--ghost);pointer-events:none;z-index:0;opacity:.5;transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.member.utama .ghost{font-size:clamp(72px,12vw,150px)}
+.member.rev .ghost{left:auto;right:80px}
+.member:hover .ghost{opacity:1;transform:translateX(-20px)}
+.member.rev:hover .ghost{transform:translateX(20px)}
+.photo{width:288px;height:288px;flex:none;position:relative;transform-style:preserve-3d}
+.member.utama .photo{width:320px;height:320px}
+.photo .frame{position:absolute;inset:0;border:2px solid;border-radius:18px;transform:rotate(6deg);transition:transform .6s var(--ease)}
+.member.rev .photo .frame{transform:rotate(-6deg)}
+.member:hover .photo .frame{transform:rotate(12deg)}
+.member.rev:hover .photo .frame{transform:rotate(-12deg)}
+.photo .pic{position:absolute;inset:0;border-radius:18px;overflow:hidden;border:1px solid var(--line-2);z-index:1;display:grid;place-items:center;font-size:84px;font-weight:700;color:rgba(255,255,255,.9);box-shadow:var(--shadow)}
+.photo .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:filter .6s var(--ease)}
+.member:hover .photo .pic img{filter:none}
+.member .info{position:relative;z-index:1}
+.member .role{font-size:13px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:16px}
+.member.rev .role{justify-content:flex-end}
+.member .role::before,.member .role::after{content:"";width:40px;height:1px;background:currentColor;flex:none}
+.member .role::after{display:none}
+.member.rev .role::before{display:none}
+.member.rev .role::after{display:block}
+.member h3{font-size:clamp(2rem,4.2vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
+.member p{color:var(--muted);max-width:460px;font-size:1.1rem;line-height:1.7}
+.member.rev p{margin-left:auto}
+@media(max-width:800px){
+  .team{gap:110px}
+  .member,.member.rev{flex-direction:column;text-align:center;gap:40px}
+  .member .role,.member.rev .role{justify-content:center}
+  .member .role::before,.member .role::after{display:block!important}
+  .member p,.member.rev p{margin:0 auto}
+  .member .ghost,.member.rev .ghost{left:50%;right:auto;top:-44px;transform:translateX(-50%)}
+  .member:hover .ghost,.member.rev:hover .ghost{transform:translateX(-50%)}
+  .photo{width:224px;height:224px}
+  .member.utama .photo{width:256px;height:256px}
+}
+
+/* ---------- footer & misc ---------- */
+footer{border-top:1px solid var(--line);background:var(--bg);padding:48px 0 32px;position:relative;z-index:1}
+footer .wrap{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:center}
+.to-top{position:fixed;right:24px;bottom:24px;z-index:60;width:84px;height:84px;border-radius:20px;border:2px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(47,123,232,.4);background:#0B3C8C;padding:8px;cursor:pointer;animation:float 4s ease-in-out infinite;object-fit:contain;transition:transform .45s cubic-bezier(.175,.885,.32,1.275),box-shadow .45s,border-color .45s}
+@media(min-width:768px){.to-top{width:120px;height:120px;right:40px;bottom:40px}}
+.to-top:hover{animation-play-state:paused;transform:scale(1.12) rotate(-10deg) translateY(-10px);box-shadow:0 15px 40px rgba(215,38,61,.7);border-color:rgba(215,38,61,.5)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-18px) rotate(6deg)}}
+
+/* ---------- struktur tim: dosen ---------- */
+.dosen{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.dosen .card{text-align:center;padding:36px 24px;display:flex;flex-direction:column;align-items:center}
+.dosen .av{width:150px;height:150px;margin-bottom:24px;border-radius:18px;overflow:hidden;position:relative;display:grid;place-items:center;font-size:48px;font-weight:700;color:rgba(255,255,255,.9);border:1px solid var(--line-2);box-shadow:var(--shadow)}
+.dosen .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dosen .r{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px}
+.dosen h3{font-size:1.25rem;line-height:1.3;margin-bottom:10px}
+.dosen p{font-size:14px;color:var(--muted)}
+.divider{display:flex;align-items:center;gap:18px;margin:96px 0 110px;font-size:13px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line-2)}
+@media(max-width:900px){.dosen{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+
+/* ---------- logbook ---------- */
+.lb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+.lb-stat{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:16px;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.lb-stat .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:21px;flex:none}
+.lb-stat .ic.a{background:rgba(47,123,232,.14);color:var(--cyan-t)}
+.lb-stat .ic.b{background:rgba(31,95,204,.14);color:var(--indigo-t)}
+.lb-stat .ic.c{background:rgba(215,38,61,.14);color:var(--pink-t)}
+.lb-stat .n{font-size:1.35rem;font-weight:700;line-height:1.2}
+.lb-stat .t{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.logbook{width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:-12px}
+.logbook th{text-align:left;padding:4px 22px 0;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.logbook th.no{text-align:center}
+.logbook td{padding:22px;vertical-align:top;background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .3s,border-color .3s}
+.logbook td:first-child{border-left:1px solid var(--line);border-radius:16px 0 0 16px;width:92px;text-align:center;position:relative}
+.logbook td:last-child{border-right:1px solid var(--line);border-radius:0 16px 16px 0}
+.logbook tbody tr:hover td{border-color:rgba(47,123,232,.45);background:var(--hover)}
+.lb-no{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:14px;font-weight:700;font-size:15px;color:#fff;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,var(--cyan),var(--indigo));box-shadow:0 8px 20px -8px rgba(31,95,204,.7)}
+.logbook tr:nth-child(3n+2) .lb-no{background:linear-gradient(135deg,var(--indigo),var(--pink))}
+.logbook tr:nth-child(3n) .lb-no{background:linear-gradient(135deg,var(--pink),var(--orange))}
+.logbook td.tgl{width:250px}
+.lb-date{display:flex;gap:12px;align-items:flex-start}
+.lb-date svg.i{font-size:18px;color:var(--cyan-t);margin-top:3px}
+.lb-date .day{display:block;font-weight:600;color:var(--text)}
+.lb-date .date{display:block;font-size:14px;color:var(--muted)}
+.lb-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:8px;border:1px solid}
+.lb-tag.plan{color:var(--cyan-t);border-color:rgba(47,123,232,.4);background:rgba(47,123,232,.08)}
+.lb-tag.build{color:var(--indigo-t);border-color:rgba(31,95,204,.4);background:rgba(31,95,204,.08)}
+.lb-tag.eval{color:var(--pink-t);border-color:rgba(215,38,61,.4);background:rgba(215,38,61,.08)}
+.lb-desc h4{font-size:1.08rem;margin-bottom:4px}
+.lb-desc p{font-size:14.5px;color:var(--muted);max-width:640px}
+@media(max-width:900px){.lb-stats{grid-template-columns:1fr}}
+@media(max-width:720px){
+  .logbook,.logbook tbody,.logbook tr,.logbook td{display:block;width:auto!important}
+  .logbook thead{display:none}
+  .logbook{border-spacing:0;margin-top:0}
+  .logbook tr{display:grid;grid-template-columns:auto 1fr;align-items:center;margin-bottom:14px;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;transition:border-color .3s}
+  .logbook td,.logbook td:first-child,.logbook td:last-child{border:0;border-radius:0;background:none;padding:18px}
+  .logbook td:first-child{padding-right:0}
+  .logbook td.uraian{grid-column:1/-1;padding-top:0}
+  .logbook tbody tr:hover{border-color:rgba(47,123,232,.45)}
+  .logbook tbody tr:hover td{background:none}
+}
+[data-tilt]{transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--ts,1));will-change:transform}
+/* Animasi muncul saat di-scroll. Kalau JS mati, konten tetap tampil */
+.js .rv{opacity:0;translate:0 34px;transition:opacity 1s var(--ease),translate 1.1s var(--ease),scale 1.1s var(--ease);transition-delay:var(--d,0ms)}
+.js .rv.l{translate:-48px 0}.js .rv.r{translate:48px 0}.js .rv.z{translate:none;scale:.94}
+.js .rv.in{opacity:1;translate:none;scale:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .rv{opacity:1;translate:none;scale:none}}
+</style>
+</head>
+<body>
+
+<!-- Kumpulan ikon (SVG, tidak butuh internet) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z" fill="currentColor"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M6 7V4h3v3M15 7V4h3v3M6 13.5h4M15 13.5h4M17 11.5v4"/></symbol>
+  <symbol id="i-finger" viewBox="0 0 24 24"><path d="M12 10a2 2 0 0 0-2 2c0 1-.1 2.5-.26 4"/><path d="M14 13.1c0 2.4 0 6.4-1 8.9"/><path d="M17.3 21c.12-.6.43-2.3.5-3"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .13-5.35 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></symbol>
+  <symbol id="i-images" viewBox="0 0 24 24"><rect x="7" y="3" width="14" height="14" rx="2"/><path d="M3 7v12a2 2 0 0 0 2 2h12"/><path d="m21 13-3-3-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-school" viewBox="0 0 24 24"><path d="m4 10 8-6 8 6v10H4z"/><path d="M10 20v-5h4v5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="#home" class="brand" style="display:flex;align-items:center;gap:10px"><img src="images/logo-kerabat-teknik.svg" alt="" width="34" height="34">Kerabat <span class="c-orange">Teknik</span></a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#home">Beranda</a>
+        <a href="#team">Struktur Tim</a>
+        <a href="#latar">Latar Belakang</a>
+        <a href="#bisnis">Model Bisnis</a>
+        <a href="#logbook">Logbook</a>
+        <a href="#galeri">Dokumentasi</a>
+        <a href="#dokumen">Dokumen</a>
+      </div>
+      <button class="theme-btn" id="themeBtn" aria-label="Ganti mode terang / gelap" title="Ganti mode terang / gelap"><svg class="i moon"><use href="#i-moon"/></svg><svg class="i sun"><use href="#i-sun"/></svg></button>
+      <button class="menu-btn" id="menuBtn" aria-label="Buka menu"><svg class="i"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home">Beranda</a>
+    <a href="#team">Struktur Tim</a>
+    <a href="#latar">Latar Belakang, Tujuan &amp; Manfaat</a>
+    <a href="#bisnis">Model Bisnis</a>
+    <a href="#logbook">Logbook</a>
+    <a href="#galeri">Dokumentasi</a>
+        <a href="#dokumen">Dokumen</a>
+  </div>
+</nav>
+
+<!-- ================= 1. BERANDA ================= -->
+<header class="hero" id="home">
+  <div>
+    <div class="pill rv">Proyek Expo Kewirausahaan · Edupreneurship</div>
+    <h1 class="rv z">Kerabat Teknik<br><span class="typed" id="typed">Dari Alat ke Kompetensi</span><span class="caret"></span></h1>
+    <p class="rv">SMK Otomotif · TKR/TBSM · Sistem Starter<br>Modul digital diagnosis sistem starter dan paket trainer yang aman, terjangkau, dan kontekstual untuk SMK.</p>
+    <div class="btns rv">
+      <a href="https://teknik.wahyudintamrin.com" class="btn solid" target="_blank" rel="noopener">Coba Modul Digital</a>
+      <a href="https://wa.me/6285299557045" class="btn" target="_blank" rel="noopener">WhatsApp 0852-9955-7045</a>
+      <a href="#latar" class="btn">Lihat Proyek Kami</a>
+      <a href="#team" class="btn">Struktur Tim</a>
+    </div>
+  </div>
+</header>
+
+<div class="marquee">
+  <div class="marquee-in">
+    &nbsp;Kerabat Teknik <span class="sep c-cyan">/</span> Dari Alat ke Kompetensi <span class="sep c-pink">/</span> Modul Digital Diagnosis Sistem Starter <span class="sep c-cyan">/</span> Alat Tiba, Praktik Jalan <span class="sep c-pink">/</span> SMK Otomotif <span class="sep c-cyan">/</span> TKR/TBSM <span class="sep c-pink">/</span>
+    Kerabat Teknik <span class="sep c-cyan">/</span> Dari Alat ke Kompetensi <span class="sep c-pink">/</span> Modul Digital Diagnosis Sistem Starter <span class="sep c-cyan">/</span> Alat Tiba, Praktik Jalan <span class="sep c-pink">/</span> SMK Otomotif <span class="sep c-cyan">/</span> TKR/TBSM <span class="sep c-pink">/</span>
+  </div>
+</div>
+
+<!-- Identitas proyek (bagian dari Beranda) -->
+<section class="section" style="padding:64px 0">
+  <div class="wrap-sm rv">
+    <div class="tbl-wrap">
+      <table class="tbl"><tbody>
+        <tr><td class="k">Judul Proyek</td><td class="v">Kerabat Teknik: Modul Digital Diagnosis Sistem Starter dan Paket Trainer untuk SMK Otomotif</td></tr>
+        <tr><td class="k">Jenis Tugas</td><td class="v">Laporan BMC dan Prototipe, Proyek Expo Kewirausahaan</td></tr>
+        <tr><td class="k">Mata Kuliah</td><td class="v">Edupreneurship</td></tr>
+        <tr><td class="k">Nama Kelompok</td><td class="v">Kelompok 4 – Kerabat Teknik</td></tr>
+        <tr><td class="k">Tagline &amp; Slogan</td><td class="v">Dari Alat ke Kompetensi · Alat Tiba, Praktik Jalan</td></tr>
+        <tr><td class="k">Dosen Pengampu</td><td class="v">Ir. Muhammad Farid, S.Pd., M.T., Ph.D., IPM., ASEAN Eng.</td></tr>
+        <tr><td class="k">Konteks Awal</td><td class="v">SMK Negeri 3 Makassar × Universitas Negeri Makassar, program keahlian TKR/TBSM</td></tr>
+        <tr><td class="k">Periode Uji Pasar</td><td class="v">2 – 29 November 2026</td></tr>
+        <tr><td class="k">Modul Digital</td><td class="v"><a href="https://teknik.wahyudintamrin.com" target="_blank" rel="noopener">teknik.wahyudintamrin.com</a></td></tr>
+        <tr><td class="k">Kontak WhatsApp</td><td class="v"><a href="https://wa.me/6285299557045" target="_blank" rel="noopener">0852-9955-7045</a></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 2. STRUKTUR TIM =================
+     Foto di folder images/ : rosmang, wahyu, ricky, aan, anies (.png / .jpg / .jpeg / .webp)
+     Selama foto belum ada, tampil inisial nama. -->
+<section class="section alt" id="team" style="padding-top:112px;padding-bottom:128px;overflow:hidden">
+  <div class="wrap" style="max-width:1100px">
+    <div class="center rv mb-l">
+      <span class="bab">Struktur Tim</span>
+      <h2 class="h2" style="font-size:clamp(2.4rem,6vw,3.8rem);text-transform:uppercase">Tim <span class="grad">Kerabat Teknik</span></h2>
+      <p class="lead">Lima anggota Kelompok 4 di balik modul digital dan paket trainer untuk SMK Otomotif.</p>
+    </div>
+
+    <div class="divider rv">Anggota Tim</div>
+
+    <div class="team">
+      <div class="member rev rv r">
+        <div class="ghost">KETUA</div>
+        <div class="photo" data-tilt data-tilt-scale="1.05">
+          <div class="frame" style="border-color:var(--indigo)"></div>
+          <div class="pic"><img src="images/wahyu.png" alt="Wahyudin" onerror="fotoLain(this)"></div>
+        </div>
+        <div class="info">
+          <div class="role c-indigo">Ketua Proyek</div>
+          <h3>Wahyudin</h3>
+          <p>Memimpin proyek serta mengelola keuangan dan Business Model Canvas, termasuk arus kas dan titik impas.</p>
+        </div>
+      </div>
+      <div class="member rv l">
+        <div class="ghost">PROTOTIPE</div>
+        <div class="photo" data-tilt data-tilt-scale="1.05">
+          <div class="frame" style="border-color:var(--pink)"></div>
+          <div class="pic"><img src="images/rosmang.png" alt="Roesmang" onerror="fotoLain(this)"></div>
+        </div>
+        <div class="info">
+          <div class="role c-pink">Prototipe Modul Digital &amp; Materi Ajar</div>
+          <h3>Roesmang</h3>
+          <p>Membangun prototipe modul digital diagnosis sistem starter beserta materi ajar dan tiga kasus latihannya.</p>
+        </div>
+      </div>
+      <div class="member rev rv r">
+        <div class="ghost">RISET</div>
+        <div class="photo" data-tilt data-tilt-scale="1.05">
+          <div class="frame" style="border-color:var(--orange)"></div>
+          <div class="pic"><img src="images/ricky.png" alt="Ricky Ridman" onerror="fotoLain(this)"></div>
+        </div>
+        <div class="info">
+          <div class="role c-orange">Riset Lapangan &amp; WhatsApp Business</div>
+          <h3>Ricky Ridman</h3>
+          <p>Menjalankan wawancara dan uji pengguna, serta memegang kontak WhatsApp Business untuk konsultasi dan permintaan penawaran.</p>
+        </div>
+      </div>
+      <div class="member rv l">
+        <div class="ghost">PEMASARAN</div>
+        <div class="photo" data-tilt data-tilt-scale="1.05">
+          <div class="frame" style="border-color:var(--cyan)"></div>
+          <div class="pic"><img src="images/aan.png" alt="Mallarangan" onerror="fotoLain(this)"></div>
+        </div>
+        <div class="info">
+          <div class="role c-cyan">Pemasaran &amp; Konten Instagram</div>
+          <h3>Mallarangan</h3>
+          <p>Merancang strategi pemasaran dan konten Instagram untuk kampanye uji pasar 2–29 November 2026.</p>
+        </div>
+      </div>
+      <div class="member rev rv r">
+        <div class="ghost">PITCH &amp; BOOTH</div>
+        <div class="photo" data-tilt data-tilt-scale="1.05">
+          <div class="frame" style="border-color:var(--indigo)"></div>
+          <div class="pic"><img src="images/anies.png" alt="Muhammad Anis Fausan" onerror="fotoLain(this)"></div>
+        </div>
+        <div class="info">
+          <div class="role c-indigo">Pitch Deck, Poster &amp; Booth Expo</div>
+          <h3>Muhammad Anis Fausan</h3>
+          <p>Menyusun pitch deck, poster, dan booth untuk Expo Kewirausahaan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. LATAR BELAKANG, TUJUAN & MANFAAT ================= -->
+<section class="section" id="latar">
+  <div class="wrap">
+    <div class="g2 mb-l" style="align-items:center;gap:64px">
+      <div class="glow-frame rv l" data-tilt data-tilt-max="5">
+        <div class="media">
+          <div class="ph"><svg class="i"><use href="#i-video"/></svg>Video pengenalan trainer sistem starter</div>
+          <!-- Video: images/vid_pengenalan.mp4 -->
+          <video autoplay loop muted playsinline><source src="images/vid_pengenalan.mp4" type="video/mp4" onerror="this.parentNode.remove()"></video>
+        </div>
+      </div>
+      <div class="rv r">
+        <span class="bab">Latar Belakang</span>
+        <h2 class="h2">Masalah di<br><span class="c-cyan">SMK Otomotif.</span></h2>
+        <div class="prose muted">
+          <p>Siswa TKR belum konsisten membaca gejala, menyusun diagnosis, lalu menguji penyebab kerusakan. Trainer fisik jumlahnya terbatas dan mahal, sementara media digital yang kontekstual belum merata. Akibatnya kompetensi siswa tidak merata dan lulusan kurang siap menghadapi kasus kompleks di dunia usaha dan dunia industri (DUDI).</p>
+          <p>Praktik langsung pada sistem starter juga berisiko karena arusnya besar: ada bahaya korsleting dan sengatan listrik, dan alat peraga bisa rusak karena salah operasi sebelum logika diagnosis terbentuk.</p>
+          <p>Rumusan masalah (How Might We): <em>bagaimana guru TKR dapat memberi siswa praktik diagnosis sistem starter yang aman, berulang, dan terukur dengan media yang terjangkau bagi sekolah daerah?</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2 mb-l">
+      <div class="rv l">
+        <h3 class="sub">Solusi Kami</h3>
+        <p class="soft" style="margin-bottom:18px"><strong>Kerabat Teknik</strong> menyediakan paket pembelajaran praktik. Prototipenya adalah modul digital diagnosis sistem starter dengan materi, tiga kasus kontekstual mesin perahu pinisi, latihan dengan umpan balik, dan refleksi. Modul dibuka di ponsel dan tetap berjalan luring.</p>
+        <p style="font-weight:600;margin-bottom:10px">Alasan memilih modul digital sebagai prototipe:</p>
+        <ol class="list tight">
+          <li><strong>Relevansi:</strong> langsung melatih berpikir diagnostik (gejala, dugaan, uji).</li>
+          <li><strong>Manfaat:</strong> praktik berulang dan aman tanpa risiko listrik, dengan umpan balik instan.</li>
+          <li><strong>Kelayakan:</strong> berbasis web ringan, tanpa instalasi, bisa diuji sebelum trainer fisik tersedia.</li>
+          <li><strong>Keaslian:</strong> kasus berkonteks lokal (mesin perahu pinisi, peran punggawa dan sawi).</li>
+          <li><strong>Fleksibilitas:</strong> dipakai mandiri atau bersama trainer; kasus mudah ditambah untuk sistem lain.</li>
+          <li><strong>Keberlanjutan:</strong> menjadi pintu masuk paket modul, trainer, pelatihan, dan purna jual.</li>
+        </ol>
+      </div>
+      <div class="rv r">
+        <h3 class="sub">Pengguna &amp; Pembayar</h3>
+        <div class="stack">
+          <div class="card side bl-cyan"><h4>Pak Andi · Pengguna</h4><p>Guru produktif TKR/TBSM. Ingin siswa praktik langsung dengan aman, tetapi alat terbatas atau rusak dan khawatir soal keselamatan siswa. Mencari informasi lewat grup WA guru/MGMP, Instagram, dan YouTube.</p></div>
+          <div class="card side bl-pink"><h4>Bu Ratna · Pembayar</h4><p>Wakasek sarpras / kepala sekolah. Perlu memenuhi sarana jurusan sesuai anggaran, butuh rincian biaya dan garansi tertulis, serta khawatir purna jual hilang.</p></div>
+          <div class="card side bl-indigo"><h4>Alur pengaruh</h4><p>Guru merekomendasikan, kepala sekolah menyetujui, bendahara membayar.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="rv l">
+        <h3 class="sub">Tujuan Proyek</h3>
+        <p class="soft" style="margin-bottom:18px"><strong>Tujuan umum:</strong> memberi siswa SMK Otomotif praktik diagnosis sistem starter yang aman, berulang, dan terukur, lewat paket terpadu yang terjangkau bagi sekolah daerah.</p>
+        <p style="font-weight:600;margin-bottom:10px">Tujuan khusus:</p>
+        <ol class="list tight">
+          <li>Melatih siswa membaca gejala, menyusun dugaan, dan menguji penyebab kerusakan sistem starter.</li>
+          <li>Menyediakan modul digital yang bisa dibuka di ponsel dan berjalan luring.</li>
+          <li>Mengurangi risiko korsleting dan sengatan listrik saat praktik.</li>
+          <li>Mengangkat konteks lokal (perahu pinisi, punggawa-sawi, sipakainge) dalam pembelajaran.</li>
+          <li>Membangun model bisnis paket terpadu: modul, trainer, instalasi, pelatihan guru, dan purna jual.</li>
+          <li>Menguji pasar lewat kampanye 2–29 November 2026 dengan target 30 calon pelanggan.</li>
+        </ol>
+      </div>
+      <div class="rv r">
+        <h3 class="sub">Manfaat Proyek</h3>
+        <div class="stack">
+          <div class="card side bl-cyan"><h4>Bagi siswa</h4><p>Praktik lebih banyak, aman, dan terukur, dengan umpan balik instan pada setiap kasus.</p></div>
+          <div class="card side bl-indigo"><h4>Bagi guru dan sekolah</h4><p>Guru terbantu menilai dan mendiagnosis kesalahan siswa; sekolah daerah menjangkau alat praktik yang sulit diperoleh dengan harga bertingkat dan mode luring.</p></div>
+          <div class="card side bl-pink"><h4>Bagi komunitas lokal</h4><p>Terbuka kerja sama dengan bengkel dan pemasok lokal serta pengakuan pengetahuan pengrajin perahu; sebagian laba disisihkan untuk komunitas.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4b. MODEL BISNIS ================= -->
+<section class="section" id="bisnis">
+  <div class="wrap">
+    <div class="center mb-l rv">
+      <span class="bab">Model Bisnis</span>
+      <h2 class="h2">Business Model <span class="grad">Canvas</span></h2>
+      <p class="lead">Layanan: pembuatan trainer pembelajaran otomotif (TKR/TBSM), pengecatan, dan pengelasan. Asumsi masih perlu divalidasi dengan harga supplier dan survei pasar.</p>
+    </div>
+
+    <div class="lb-stats rv">
+      <div class="lb-stat"><div class="ic a"><svg class="i"><use href="#i-list"/></svg></div><div><div class="n">6 transaksi / bulan</div><div class="t">Titik impas (omzet ± Rp 54 juta)</div></div></div>
+      <div class="lb-stat"><div class="ic b"><svg class="i"><use href="#i-arrow"/></svg></div><div><div class="n">Rp 10,3 juta / bulan</div><div class="t">Arus kas bersih pada target 8 transaksi</div></div></div>
+      <div class="lb-stat"><div class="ic c"><svg class="i"><use href="#i-cal"/></svg></div><div><div class="n">Rp 18,5 juta / bulan</div><div class="t">Total biaya tetap</div></div></div>
+    </div>
+
+    <div class="rv" style="margin-bottom:48px">
+      <img src="images/bmc.jpg" alt="Business Model Canvas Kerabat Teknik" loading="lazy" style="width:100%;border-radius:16px;border:1px solid var(--line-2)" onerror="this.remove()">
+    </div>
+
+    <div class="g2 mb-l">
+      <div class="rv l">
+        <h3 class="sub">Arus Kas &amp; Titik Impas</h3>
+        <p class="soft small" style="margin-bottom:14px">Satu transaksi rata-rata Rp 9.000.000 (trainer Rp 8.000.000 + instalasi/pelatihan Rp 1.000.000). Biaya variabel 60% (Rp 5.400.000), kontribusi Rp 3.600.000 (40%) per transaksi. Uang muka 50% saat pemesanan, pelunasan saat serah terima.</p>
+        <div class="tbl-wrap">
+          <table class="tbl wide"><thead><tr><th>Rp / bulan</th><th>Awal (3)</th><th>Impas (6)</th><th>Target (8)</th></tr></thead><tbody>
+            <tr><td>Penerimaan</td><td>27.000.000</td><td>54.000.000</td><td>72.000.000</td></tr>
+            <tr><td>Biaya variabel (60%)</td><td>(16.200.000)</td><td>(32.400.000)</td><td>(43.200.000)</td></tr>
+            <tr><td>Biaya tetap</td><td>(18.500.000)</td><td>(18.500.000)</td><td>(18.500.000)</td></tr>
+            <tr><td><strong>Arus kas bersih</strong></td><td><strong>(7.700.000)</strong></td><td><strong>3.100.000</strong></td><td><strong>10.300.000</strong></td></tr>
+          </tbody></table>
+        </div>
+        <p class="soft small" style="margin-top:14px">Titik impas = Rp 18.500.000 / Rp 3.600.000 = 5,14, dibulatkan 6 transaksi per bulan. Defisit bulan awal ditutup modal kerja cadangan Rp 25 juta selama sekitar 3 bulan. Target pendapatan berulang (perawatan dan suku cadang) 15% dari omzet.</p>
+      </div>
+      <div class="rv r">
+        <h3 class="sub">Merek &amp; Pemasaran</h3>
+        <div class="stack">
+          <div class="card side bl-cyan"><h4>Nama &amp; tagline</h4><p>Kerabat Teknik: rekan dekat yang bisa diandalkan di bidang teknik. Tagline <em>Dari Alat ke Kompetensi</em>; slogan kampanye <em>Alat Tiba, Praktik Jalan</em>.</p></div>
+          <div class="card side bl-indigo"><h4>Warna &amp; huruf</h4><p>Biru Teknik #0B3C8C, Kuning Praktik #FFC72C, Merah Bengkel #D7263D, Biru Langit #EAF1FB. Judul Poppins Bold, isi Poppins Regular.</p></div>
+          <div class="card side bl-pink"><h4>Kanal</h4><p>Instagram (edukasi), WhatsApp Business (konsultasi dan penawaran), serta kunjungan/demo langsung untuk membangun kepercayaan.</p></div>
+          <div class="card side bl-cyan"><h4>Kampanye uji pasar 2–29 November 2026</h4><p>Target 30 calon pelanggan terkualifikasi, 5 permintaan penawaran, 2 jadwal demo, biaya per lead maksimal Rp 92.000, jangkauan 10.000 akun. Anggaran Rp 2.750.000.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv">
+      <h3 class="sub">Nilai &amp; Dampak Sosial</h3>
+      <p class="soft" style="max-width:900px">Usaha mengangkat teknologi tradisional pembuatan perahu pinisi (Bulukumba; diakui UNESCO 2017) dengan pola belajar punggawa-sawi serta nilai sipakatau, sipakalebbi, sipakainge, dan lempu'. Pemanfaatan dilakukan dengan izin tertulis, atribusi, dan pembagian manfaat; konten ritual atau sakral tidak dikomersialkan. Teknologi hanya pendukung: keterampilan membaca rangkaian dan alat ukur manual tetap diajarkan.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. LOGBOOK =================
+     Tambah kegiatan: salin satu blok <tr> ... </tr> di bawah, lalu ubah nomor, hari, tanggal, dan uraiannya.
+     Label tahap: class "plan" (Perencanaan), "build" (Implementasi), "eval" (Evaluasi).
+     Jumlah kegiatan di atas tabel dihitung otomatis.
+     Teks kuning = masih perlu diisi (hapus <span class="isi"> setelah diganti). -->
+<section class="section alt" id="logbook">
+  <div class="wrap">
+    <div class="center mb-l rv">
+      <span class="bab">Catatan Kegiatan</span>
+      <h2 class="h2">Logbook <span class="grad">Kegiatan</span></h2>
+      <p class="lead">Jejak kerja tim dari ideasi sampai rencana penjualan, termasuk tahap yang masih berjalan.</p>
+    </div>
+
+    <div class="lb-stats rv">
+      <div class="lb-stat"><div class="ic a"><svg class="i"><use href="#i-list"/></svg></div><div><div class="n"><span id="lbCount">8</span> kegiatan</div><div class="t">Tercatat dan direncanakan</div></div></div>
+      <div class="lb-stat"><div class="ic b"><svg class="i"><use href="#i-cal"/></svg></div><div><div class="n">Okt 2026 – Awal 2027</div><div class="t">Rentang kegiatan</div></div></div>
+      <div class="lb-stat"><div class="ic c"><svg class="i"><use href="#i-school"/></svg></div><div><div class="n">SMKN 3 Makassar</div><div class="t">Konteks awal · Makassar</div></div></div>
+    </div>
+
+    <div class="rv">
+      <table class="logbook">
+        <thead><tr><th class="no">No</th><th>Hari / Tanggal</th><th>Uraian Kegiatan</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="no"><span class="lb-no">01</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Tahap awal</span><span class="date">Sebelum 24 Oktober 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag plan">Perencanaan</span><h4>Ideasi &amp; pemilihan solusi (UTS)</h4><p>Brainwriting, SCAMPER, dan refleksi menghasilkan 15 alternatif ide dalam 6 kategori, dianalisis dengan enam kriteria menjadi lima ide unggulan. Modul digital diagnosis dipilih sebagai prototipe.</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">02</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Tahap awal</span><span class="date">Sebelum 24 Oktober 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag plan">Perencanaan</span><h4>Analisis BMC, persona &amp; proposal</h4><p>Menyusun Business Model Canvas (LK 5.D), persona Pak Andi dan Bu Ratna (LK 6.D), arus kas dan titik impas (LK 7.E), serta proposal dan cek nilai usaha (LK 8.D, 8.E).</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">03</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Tahap awal</span><span class="date">Sebelum 24 Oktober 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag build">Implementasi</span><h4>Pembuatan prototipe modul digital</h4><p>Prototipe awal berupa simulator trainer starter diubah menjadi modul digital: tabel diagnosis cepat, tiga kasus lokal, dan pembagian peran punggawa-sawi.</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">04</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Sabtu</span><span class="date">24 Oktober 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag eval">Evaluasi</span><h4>Uji fungsional prototipe</h4><p>Dijalankan pada layar ponsel 400 × 780 piksel. Enam dari enam butir uji lulus: membuka modul, pindah ke Materi, menjawab benar dan salah, ulangi latihan, dan halaman Refleksi.</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">05</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Berjalan</span><span class="date">Oktober – November 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag eval">Evaluasi</span><h4>Wawancara 5 responden &amp; uji 5 pengguna</h4><p>Wawancara guru produktif, wakasek sarpras, instruktur BLK, dan siswa; uji pengguna untuk merevisi modul dan menambah kasus. Hasilnya diisi setelah data lapangan terkumpul.</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">06</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Selama kampanye</span><span class="date">2 – 29 November 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag build">Implementasi</span><h4>Kampanye uji pasar</h4><p>Instagram, WhatsApp Business, dan demo langsung, memuat Hari Guru Nasional 25 November. Delapan konten dalam empat pilar; anggaran Rp 2.750.000.</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">07</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Rencana</span><span class="date">Desember 2026</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag plan">Perencanaan</span><h4>Purwarupa trainer fisik</h4><p>Trainer bertegangan rendah dengan sensor, relay, dan sekering, diuji di 2 SMK mitra (rencana).</p></div></td>
+          </tr>
+          <tr>
+            <td class="no"><span class="lb-no">08</span></td>
+            <td class="tgl"><div class="lb-date"><svg class="i"><use href="#i-cal"/></svg><div><span class="day">Rencana</span><span class="date">Awal 2027 (usulan)</span></div></div></td>
+            <td class="uraian"><div class="lb-desc"><span class="lb-tag plan">Perencanaan</span><h4>Legalitas &amp; mulai penjualan</h4><p>Mengurus NIB dan NPWP, menetapkan paket harga bertingkat, lalu memulai penjualan berdasarkan pesanan (rencana).</p></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6. DOKUMENTASI =================
+     Taruh foto/video di folder images/ dengan nama sesuai src di bawah.
+     Selama file belum ada, kotak akan menampilkan keterangan fotonya. -->
+<section class="section" id="galeri">
+  <div class="wrap">
+    <div class="center mb-l rv">
+      <span class="bab">Dokumentasi</span>
+      <h2 class="h2">Dokumentasi <span class="grad">Kegiatan</span></h2>
+      <p class="lead">Tampilan prototipe, poster, dan materi pitch Kerabat Teknik.</p>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="gal rv z">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Modul: halaman Pembuka</div>
+        <img src="images/modul-pembuka.jpg" alt="Modul: halaman Pembuka" loading="lazy" onerror="this.remove()">
+        <div class="cap">Modul: halaman Pembuka</div>
+      </div>
+      <div class="gal rv z">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Modul: halaman Materi</div>
+        <img src="images/modul-materi.jpg" alt="Modul: halaman Materi" loading="lazy" onerror="this.remove()">
+        <div class="cap">Modul: halaman Materi</div>
+      </div>
+      <div class="gal w2 h2 rv z">
+        <div class="ph"><svg class="i"><use href="#i-video"/></svg>Video pengenalan trainer sistem starter</div>
+        <video autoplay loop muted playsinline><source src="images/vid_pengenalan.mp4" type="video/mp4" onerror="this.parentNode.remove()"></video>
+        <div class="cap">Video pengenalan trainer sistem starter</div>
+      </div>
+      <div class="gal rv z">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Modul: kasus dengan umpan balik</div>
+        <img src="images/modul-kasus.jpg" alt="Modul: kasus dengan umpan balik" loading="lazy" onerror="this.remove()">
+        <div class="cap">Modul: kasus dengan umpan balik</div>
+      </div>
+      <div class="gal rv z">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Poster Expo Kewirausahaan</div>
+        <img src="images/poster.jpg" alt="Poster Expo Kewirausahaan" loading="lazy" onerror="this.remove()">
+        <div class="cap">Poster Expo Kewirausahaan</div>
+      </div>
+
+      <!-- Muncul setelah klik "Lihat semua" -->
+      <div class="gal extra">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Pitch deck: sampul</div>
+        <img src="images/pitch-1.jpg" alt="Pitch deck: sampul" loading="lazy" onerror="this.remove()">
+        <div class="cap">Pitch deck: sampul</div>
+      </div>
+      <div class="gal extra">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Pitch deck: solusi paket terpadu</div>
+        <img src="images/pitch-3.jpg" alt="Pitch deck: solusi paket terpadu" loading="lazy" onerror="this.remove()">
+        <div class="cap">Pitch deck: solusi paket terpadu</div>
+      </div>
+      <div class="gal extra">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Pitch deck: strategi dan implementasi</div>
+        <img src="images/pitch-5.jpg" alt="Pitch deck: model bisnis" loading="lazy" onerror="this.remove()">
+        <div class="cap">Pitch deck: strategi dan implementasi</div>
+      </div>
+      <div class="gal extra">
+        <div class="ph"><svg class="i"><use href="#i-image"/></svg>Business Model Canvas</div>
+        <img src="images/bmc.jpg" alt="Business Model Canvas" loading="lazy" onerror="this.remove()">
+        <div class="cap">Business Model Canvas</div>
+      </div>
+    </div>
+
+    <div class="center" style="margin-top:44px">
+      <button class="btn" id="galBtn"><svg class="i"><use href="#i-images"/></svg> <span>Lihat semua</span></button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 7. DOKUMEN DAN KONTAK ================= -->
+<section class="section alt" id="dokumen">
+  <div class="wrap">
+    <div class="center mb-l rv">
+      <span class="bab">Dokumen &amp; Kontak</span>
+      <h2 class="h2">Unduh <span class="grad">Dokumen</span></h2>
+      <p class="lead">Semua dokumen tersedia dalam Word (mudah diedit) dan PDF (siap dibaca atau dicetak).</p>
+    </div>
+    <div class="dokgrid">
+      <div class="dk rv">
+        <svg class="i"><use href="#i-file"/></svg>
+        <div><div class="t">Laporan BMC dan Prototipe</div><div class="d">Business Model Canvas, prototipe, uji, arus kas, strategi, dan rencana (7 halaman).</div></div>
+        <div class="acts"><a class="btn sm" href="dokumen/Laporan_BMC_dan_Prototipe.docx" download><svg class="i"><use href="#i-download"/></svg> Word</a><a class="btn sm" href="dokumen/Laporan_BMC_dan_Prototipe.pdf" target="_blank" rel="noopener"><svg class="i"><use href="#i-ext"/></svg> PDF</a></div>
+      </div>
+      <div class="dk rv">
+        <svg class="i"><use href="#i-file"/></svg>
+        <div><div class="t">Pitch Deck</div><div class="d">7 slide: masalah, solusi, peluang pasar, model bisnis, strategi, dan ajakan.</div></div>
+        <div class="acts"><a class="btn sm" href="dokumen/Pitch_Deck_Kerabat_Teknik.docx" download><svg class="i"><use href="#i-download"/></svg> Word</a><a class="btn sm" href="dokumen/Pitch_Deck_Kerabat_Teknik.pdf" target="_blank" rel="noopener"><svg class="i"><use href="#i-ext"/></svg> PDF</a></div>
+      </div>
+      <div class="dk rv">
+        <svg class="i"><use href="#i-file"/></svg>
+        <div><div class="t">Poster Expo</div><div class="d">Poster promosi A3 dengan QR modul digital dan WhatsApp.</div></div>
+        <div class="acts"><a class="btn sm" href="dokumen/Poster_Kerabat_Teknik.docx" download><svg class="i"><use href="#i-download"/></svg> Word</a><a class="btn sm" href="dokumen/Poster_Kerabat_Teknik.pdf" target="_blank" rel="noopener"><svg class="i"><use href="#i-ext"/></svg> PDF</a></div>
+      </div>
+      <div class="dk rv">
+        <svg class="i"><use href="#i-file"/></svg>
+        <div><div class="t">Naskah Pitching dan Booth</div><div class="d">Naskah 9 menit, rancangan booth, dan antisipasi pertanyaan.</div></div>
+        <div class="acts"><a class="btn sm" href="dokumen/Naskah_Pitching_dan_Booth.docx" download><svg class="i"><use href="#i-download"/></svg> Word</a><a class="btn sm" href="dokumen/Naskah_Pitching_dan_Booth.pdf" target="_blank" rel="noopener"><svg class="i"><use href="#i-ext"/></svg> PDF</a></div>
+      </div>
+      <div class="dk rv">
+        <svg class="i"><use href="#i-image"/></svg>
+        <div><div class="t">Business Model Canvas</div><div class="d">Gambar BMC Kerabat Teknik (JPG).</div></div>
+        <div class="acts"><a class="btn sm" href="dokumen/BMC_Kerabat_Teknik.jpg" download><svg class="i"><use href="#i-download"/></svg> JPG</a></div>
+      </div>
+      <div class="dk rv">
+        <svg class="i"><use href="#i-phone"/></svg>
+        <div><div class="t">Modul Digital Diagnosis Sistem Starter</div><div class="d">Materi, 3 kasus latihan, dan refleksi. Jalan di ponsel dan bisa luring.</div></div>
+        <div class="acts"><a class="btn sm solid" href="https://teknik.wahyudintamrin.com" target="_blank" rel="noopener"><svg class="i"><use href="#i-ext"/></svg> Buka modul</a><a class="btn sm" href="modul/index.html" target="_blank" rel="noopener">Salinan luring</a></div>
+      </div>
+    </div>
+    <div class="kontak">
+      <div class="kc rv">
+        <img src="images/qr-modul.png" alt="QR modul digital">
+        <div><div class="t">Coba Modul Digital</div><div class="d">Pindai QR atau buka teknik.wahyudintamrin.com</div><a class="btn sm solid" href="https://teknik.wahyudintamrin.com" target="_blank" rel="noopener">Buka modul</a></div>
+      </div>
+      <div class="kc rv">
+        <img src="images/qr-whatsapp.png" alt="QR WhatsApp Kerabat Teknik">
+        <div><div class="t">Hubungi via WhatsApp</div><div class="d">0852-9955-7045 · demo, penawaran, dan pelatihan guru</div><a class="btn sm solid" href="https://wa.me/6285299557045" target="_blank" rel="noopener">Chat WhatsApp</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /DOKUMEN -->
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand" style="font-size:1.8rem">Kerabat <span class="c-orange">Teknik</span></div>
+      <p class="muted small" style="margin-top:12px;max-width:420px">E-Portofolio Proyek Expo Kewirausahaan, Edupreneurship. Dari Alat ke Kompetensi.</p>
+    </div>
+    <div class="small" style="color:var(--dim);text-align:right">
+      <p>WhatsApp: <a href="https://wa.me/6285299557045" target="_blank" rel="noopener">0852-9955-7045</a> · Modul: <a href="https://teknik.wahyudintamrin.com" target="_blank" rel="noopener">teknik.wahyudintamrin.com</a></p>
+      <p style="margin-top:6px">Edupreneurship - Universitas Negeri Makassar</p>
+      <p style="margin-top:6px">© 2026 Kelompok 4 · Kerabat Teknik</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Logo melayang: klik untuk kembali ke atas -->
+<img src="images/logo-kerabat-teknik.svg" alt="Kembali ke atas" title="Kembali ke atas" class="to-top" onclick="window.smoothTo(0)" onerror="this.remove()">
+
+<script>
+(function(){
+  // ===== Scroll halus (desktop/laptop dengan mouse) =====
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var cur = window.scrollY, target = cur, running = false, ease = 0.1;
+  function maxY(){ return root.scrollHeight - window.innerHeight; }
+  function loop(){
+    cur += (target - cur) * ease;
+    if (Math.abs(target - cur) < 0.5){ cur = target; running = false; }
+    window.scrollTo(0, cur);
+    if (running) requestAnimationFrame(loop);
+  }
+  function go(y, e){
+    target = Math.max(0, Math.min(maxY(), y)); ease = e || 0.1;
+    if (!running){ running = true; cur = window.scrollY; requestAnimationFrame(loop); }
+  }
+  window.smoothTo = function(y){
+    if (reduce){ window.scrollTo(0, y); return; }
+    go(y, 0.075);
+  };
+  if (!reduce){
+    root.style.scrollBehavior = 'auto';
+    if (finePointer){
+      window.addEventListener('wheel', function(e){
+        if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+        var d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+        e.preventDefault();
+        if (!running) target = window.scrollY;
+        go(target + d, 0.1);
+      }, { passive: false });
+    }
+    // Sinkron kalau scroll lewat keyboard / scrollbar
+    window.addEventListener('scroll', function(){ if (!running){ cur = target = window.scrollY; } }, { passive: true });
+    // Link menu (#bagian) meluncur halus
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(ev){
+        var id = a.getAttribute('href');
+        var el = id.length > 1 && document.querySelector(id);
+        if (!el) return;
+        ev.preventDefault();
+        window.smoothTo(el.getBoundingClientRect().top + window.scrollY - (id === '#home' ? 80 : 72));
+      });
+    });
+  }
+
+  // ===== Efek miring 3D saat kursor di atas foto/kartu =====
+  if (finePointer && !reduce){
+    document.querySelectorAll('[data-tilt]').forEach(function(el){
+      var max = parseFloat(el.dataset.tiltMax || 10), sc = parseFloat(el.dataset.tiltScale || 1.02);
+      var rx = 0, ry = 0, s = 1, trx = 0, try_ = 0, ts = 1, raf = null;
+      function step(){
+        rx += (trx - rx) * 0.12; ry += (try_ - ry) * 0.12; s += (ts - s) * 0.12;
+        el.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+        el.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+        el.style.setProperty('--ts', s.toFixed(4));
+        if (Math.abs(trx - rx) + Math.abs(try_ - ry) + Math.abs(ts - s) > 0.01) raf = requestAnimationFrame(step);
+        else raf = null;
+      }
+      function kick(){ if (!raf) raf = requestAnimationFrame(step); }
+      el.addEventListener('pointermove', function(e){
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        try_ = x * max * 2; trx = -y * max * 2; ts = sc; kick();
+      });
+      el.addEventListener('pointerleave', function(){ trx = 0; try_ = 0; ts = 1; kick(); });
+    });
+  }
+
+  // Efek mengetik
+  var words = ['Dari Alat ke Kompetensi', 'Alat Tiba, Praktik Jalan', 'Modul Digital Diagnosis'];
+  var el = document.getElementById('typed'), w = 0, c = words[0].length, del = true;
+  function tick(){
+    var word = words[w];
+    c += del ? -1 : 1;
+    el.textContent = word.slice(0, c) || '​';
+    var wait = del ? 30 : 55;
+    if (!del && c === word.length){ del = true; wait = 2000; }
+    else if (del && c === 0){ del = false; w = (w + 1) % words.length; wait = 300; }
+    setTimeout(tick, wait);
+  }
+  setTimeout(tick, 2000);
+
+  // Animasi muncul saat scroll
+  var items = document.querySelectorAll('.rv');
+  items.forEach(function(el){
+    if (el.classList.contains('tl-item')) return;
+    var sib = Array.prototype.filter.call(el.parentNode.children, function(c){ return c.classList.contains('rv'); });
+    var i = sib.indexOf(el);
+    if (i > 0) el.style.setProperty('--d', Math.min(i, 5) * 110 + 'ms');
+  });
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -60px 0px', threshold: 0.05 });
+    items.forEach(function(i){ io.observe(i); });
+  } else { items.forEach(function(i){ i.classList.add('in'); }); }
+
+
+  // Navbar
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 40); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Tombol mode terang / gelap
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kerabatteknik-theme', next); } catch(e){}
+  });
+
+  // Logbook: jumlah kegiatan dihitung otomatis dari baris tabel
+  var lbCount = document.getElementById('lbCount');
+  if (lbCount) lbCount.textContent = document.querySelectorAll('#logbook tbody tr').length;
+
+  // Menu HP
+  var btn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
+  btn.addEventListener('click', function(){
+    var open = menu.classList.toggle('open');
+    btn.innerHTML = '<svg class="i"><use href="#' + (open ? 'i-close' : 'i-menu') + '"/></svg>';
+  });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ menu.classList.remove('open'); btn.innerHTML = '<svg class="i"><use href="#i-menu"/></svg>'; }); });
+
+  // Galeri: lihat semua / sembunyikan
+  var gal = document.getElementById('gallery'), gb = document.getElementById('galBtn');
+  if (!gal.querySelector('.extra')) gb.style.display = 'none';
+  gb.addEventListener('click', function(){
+    var open = gal.classList.toggle('expanded');
+    gb.innerHTML = open ? '<svg class="i"><use href="#i-up"/></svg> <span>Sembunyikan</span>'
+                        : '<svg class="i"><use href="#i-images"/></svg> <span>Lihat semua</span>';
+    if (!open) window.smoothTo(document.getElementById('galeri').getBoundingClientRect().top + window.scrollY - 72);
+  });
+
+  // Tombol link yang href-nya masih kosong -> "Link menyusul"
+  document.querySelectorAll('[data-link]').forEach(function(a){
+    var h = (a.getAttribute('href') || '').trim();
+    if (!h || h === '#'){
+      a.classList.add('off');
+      a.removeAttribute('target');
+      a.setAttribute('aria-disabled', 'true');
+      a.title = 'Link menyusul';
+      var d = a.querySelector('.d');
+      if (d) d.textContent = 'Link menyusul';
+      else a.lastChild.textContent = ' ' + a.textContent.trim() + ' (menyusul)';
+      a.addEventListener('click', function(ev){ ev.preventDefault(); });
+    }
+  });
+})();
+</script>
+</body>
+</html>
